@@ -3,19 +3,19 @@ use axum::extract::{Path, State};
 use axum::http::{HeaderMap, HeaderName, HeaderValue, StatusCode};
 use axum::response::{IntoResponse, Response};
 use base64::Engine;
-use base64::prelude::{BASE64_STANDARD, BASE64_STANDARD_NO_PAD};
+use base64::prelude::BASE64_STANDARD;
 use reqwest::Client;
 
-pub async fn get_image_komikindo_link(State(client): State<Client>, Path(url):Path<String>) -> Response {
+pub async fn get_image_komikindo_link(State(client): State<Client>, Path(url): Path<String>) -> Response {
     // contoh url
     // let url = "https://linksaya.com/images/m/milf-hunting-in-another-world/chapter-01/3.webp";
 
-    let url =  match BASE64_STANDARD.decode(url){
-        Ok(r) =>{
+    let url = match BASE64_STANDARD.decode(url) {
+        Ok(r) => {
             let str_url = String::from_utf8_lossy(&r);
             str_url.to_string()
-        },
-        Err(_)=>{
+        }
+        Err(_) => {
             return (StatusCode::BAD_REQUEST, Body::empty()).into_response();
         }
     };
@@ -44,15 +44,6 @@ pub async fn get_image_komikindo_link(State(client): State<Client>, Path(url):Pa
         .unwrap()
 }
 
-pub async fn test(Path(url): Path<String>)->String{
-    let url =  BASE64_STANDARD.decode(url);
-    if let Ok(url) = url{
-        let str = String::from_utf8_lossy(&url);
-        return  str.to_string();
-    }
-    "".to_string()
-
-}
 
 #[tokio::test]
 async fn get_image_test() {
@@ -67,7 +58,7 @@ async fn get_image_test() {
 }
 
 #[tokio::test]
-async fn test_encode(){
+async fn test_encode() {
     let name = "https://linksaya.com/images/m/milf-hunting-in-another-world/chapter-01/3.webp";
     let a = urlencoding::encode(name);
     let b = BASE64_STANDARD_NO_PAD.encode(name);

@@ -1,18 +1,18 @@
 use axum::Router;
 use axum::routing::get;
 use reqwest::Client;
-use crate::reverse::{get_image_komikindo_link, test};
+
+use crate::reverse::get_image_komikindo_link;
 
 mod reverse;
 
 #[tokio::main]
 async fn main() {
-
-   server().await
+    server().await
 }
 
-async fn server(){
-    let client  =Client::new();
+async fn server() {
+    let client = Client::new();
 
     let port = dotenvy::var("PORT").unwrap_or("3000".to_string());
     let app = Router::new()
