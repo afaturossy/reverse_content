@@ -21,7 +21,7 @@ pub async fn get_image_komikindo_link(State(client): State<Client>, Path(url): P
     };
 
     let reqwest_response = match client.get(url)
-        .header("Referer", "https://komikindo.link")
+        .header("Referer", "https://komikindo.link/")
         .send().await {
         Ok(res) => res,
         Err(_) => {
@@ -45,6 +45,7 @@ pub async fn get_image_komikindo_link(State(client): State<Client>, Path(url): P
 }
 
 
+
 #[tokio::test]
 async fn get_image_test() {
     let url = "https://linksaya.com/images/m/milf-hunting-in-another-world/chapter-01/3.webp";
@@ -59,10 +60,5 @@ async fn get_image_test() {
 
 #[tokio::test]
 async fn test_encode() {
-    let name = "https://linksaya.com/images/m/milf-hunting-in-another-world/chapter-01/3.webp";
-    let a = urlencoding::encode(name);
-    let b = BASE64_STANDARD_NO_PAD.encode(name);
-    let z = "aHR0cHM6Ly9saW5rc2F5YS5jb20vaW1hZ2VzL20vbWlsZi1odW50aW5nLWluLWFub3RoZXItd29ybGQvY2hhcHRlci0wMS8zLndlYnA=";
-    println!("{:?}", a);
-    println!("{:?}", b);
+
 }
