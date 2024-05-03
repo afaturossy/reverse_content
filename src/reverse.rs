@@ -1,11 +1,25 @@
 use axum::body::Body;
-use axum::extract::State;
+use axum::extract::{Path, State};
 use axum::http::{HeaderMap, HeaderName, HeaderValue, StatusCode};
 use axum::response::{IntoResponse, Response};
+use base64::Engine;
+use base64::prelude::{BASE64_STANDARD, BASE64_STANDARD_NO_PAD};
 use reqwest::Client;
 
-pub async fn get_image_linksaya(State(client): State<Client>) -> Response {
-    let url = "https://linksaya.com/images/m/milf-hunting-in-another-world/chapter-01/3.webp";
+pub async fn get_image_linksaya(State(client): State<Client>, Path(url):Path<String>) -> Response {
+    // contoh url
+    // let url = "https://linksaya.com/images/m/milf-hunting-in-another-world/chapter-01/3.webp";
+
+    let url =  match BASE64_STANDARD.decode(url){
+        Ok(r) =>{
+            let str_url = String::from_utf8_lossy(&r);
+            str_url.to_string()
+        },
+        Err(_)=>{
+            return (StatusCode::BAD_REQUEST, Body::empty()).into_response();
+        }
+    };
+
     let reqwest_response = match client.get(url)
         .header("Referer", "https://komikindo.link")
         .send().await {
@@ -30,6 +44,16 @@ pub async fn get_image_linksaya(State(client): State<Client>) -> Response {
         .unwrap()
 }
 
+pub async fn test(Path(url): Path<String>)->String{
+    let url =  BASE64_STANDARD.decode(url);
+    if let Ok(url) = url{
+        let str = String::from_utf8_lossy(&url);
+        return  str.to_string();
+    }
+    "".to_string()
+
+}
+
 #[tokio::test]
 async fn get_image_test() {
     let url = "https://linksaya.com/images/m/milf-hunting-in-another-world/chapter-01/3.webp";
@@ -40,4 +64,14 @@ async fn get_image_test() {
         .send().await;
 
     println!("{:?}", resp.unwrap().status());
+}
+
+#[tokio::test]
+async fn test_encode(){
+    let name = "https://linksaya.com/images/m/milf-hunting-in-another-world/chapter-01/3.webp";
+    let a = urlencoding::encode(name);
+    let b = BASE64_STANDARD_NO_PAD.encode(name);
+    let z = "aHR0cHM6Ly9saW5rc2F5YS5jb20vaW1hZ2VzL20vbWlsZi1odW50aW5nLWluLWFub3RoZXItd29ybGQvY2hhcHRlci0wMS8zLndlYnA=";
+    println!("{:?}", a);
+    println!("{:?}", b);
 }
