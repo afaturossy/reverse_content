@@ -6,7 +6,7 @@ use base64::Engine;
 use base64::prelude::{BASE64_STANDARD, BASE64_STANDARD_NO_PAD};
 use reqwest::Client;
 
-pub async fn get_image_linksaya(State(client): State<Client>, Path(url):Path<String>) -> Response {
+pub async fn get_image_komikindo_link(State(client): State<Client>, Path(url):Path<String>) -> Response {
     // contoh url
     // let url = "https://linksaya.com/images/m/milf-hunting-in-another-world/chapter-01/3.webp";
 

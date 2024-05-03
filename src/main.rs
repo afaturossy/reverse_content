@@ -1,7 +1,7 @@
 use axum::Router;
 use axum::routing::get;
 use reqwest::Client;
-use crate::reverse::{get_image_linksaya, test};
+use crate::reverse::{get_image_komikindo_link, test};
 
 mod reverse;
 
@@ -16,7 +16,7 @@ async fn server(){
 
     let port = dotenvy::var("PORT").unwrap_or("3000".to_string());
     let app = Router::new()
-        .route("/linksaya/:url", get(get_image_linksaya))
+        .route("/k_link/:url", get(get_image_komikindo_link)) // komikindo.link
         .with_state(client);
 
     // run our app with hyper, listening globally on port 3000
